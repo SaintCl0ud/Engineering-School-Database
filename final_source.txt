@@ -1,0 +1,1188 @@
+package pcon;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class addpro
+ */
+@WebServlet("/addpro")
+public class addpro extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static Connection dbConnection = null;
+    private DBconnect dcc = null;
+     private UserController uc = new UserController(dbConnection);
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public addpro() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String url = "/AddP.jsp";
+        String fname = request.getParameter("fname");
+        String lname = request.getParameter("lname");
+        String major = request.getParameter("major");
+        String gpa = request.getParameter("gpa");
+        String grad = request.getParameter("grad");
+        ConnectionPool pool = ConnectionPool.getInstance("jdbc/b0gamb01");
+        dbConnection = pool.getConnection();
+        try {
+			PreparedStatement send = dbConnection.prepareStatement("insert into PROFESSORS (PFNAME,PLNAME,DEPT,TEACHES,SEM) values (?,?,?,?,?)");
+			send.setString(1, fname);
+			send.setString(2, lname);
+			send.setString(3, major);
+			send.setString(4, gpa);
+			send.setString(5, grad);
+			int exe = send.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        url = "/logged.jsp";
+        request.setAttribute("success", "Professor successfully added to database!");
+        ServletContext context = getServletContext();
+        RequestDispatcher dispatcher = context.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
+        pool.freeConnection(dbConnection);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+package pcon;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class addstu
+ */
+@WebServlet("/addstu")
+public class addstu extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static Connection dbConnection = null;
+    private DBconnect dcc = null;
+     private UserController uc = new UserController(dbConnection);
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public addstu() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String url = "/AddS.jsp";
+        String fname = request.getParameter("fname");
+        String lname = request.getParameter("lname");
+        String major = request.getParameter("major");
+        String gpa = request.getParameter("gpa");
+        String grad = request.getParameter("grad");
+        ConnectionPool pool = ConnectionPool.getInstance("jdbc/b0gamb01");
+        dbConnection = pool.getConnection();
+        try {
+			PreparedStatement send = dbConnection.prepareStatement("insert into STUDENTS (FNAME,LNAME,MAJOR,GPA,GRAD) values (?,?,?,?,?)");
+			send.setString(1, fname);
+			send.setString(2, lname);
+			send.setString(3, major);
+			send.setString(4, gpa);
+			send.setString(5, grad);
+			int exe = send.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        url = "/logged.jsp";
+        request.setAttribute("success", "Student successfully added to database!");
+        ServletContext context = getServletContext();
+        RequestDispatcher dispatcher = context.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
+        pool.freeConnection(dbConnection);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+package pcon;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class delstu
+ */
+@WebServlet("/delpro")
+public class delpro extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static Connection dbConnection = null;
+    private DBconnect dcc = null;
+    private UserController uc = new UserController(dbConnection);
+      
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public delpro() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String url = "/DeleteP.jsp";
+        String id = request.getParameter("id");
+        ConnectionPool pool = ConnectionPool.getInstance("jdbc/b0gamb01");
+        dbConnection = pool.getConnection();
+        try {
+			PreparedStatement send = dbConnection.prepareStatement("delete PROFESSORS where PID = " + id);
+			int exe = send.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        url = "/logged.jsp";
+        request.setAttribute("success", "Professor successfully deleted from the database!");
+        ServletContext context = getServletContext();
+        RequestDispatcher dispatcher = context.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
+        pool.freeConnection(dbConnection);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+package pcon;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class delstu
+ */
+@WebServlet("/delstu")
+public class delstu extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static Connection dbConnection = null;
+    private DBconnect dcc = null;
+    private UserController uc = new UserController(dbConnection);
+      
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public delstu() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String url = "/DeleteS.jsp";
+        String id = request.getParameter("id");
+        ConnectionPool pool = ConnectionPool.getInstance("jdbc/b0gamb01");
+        dbConnection = pool.getConnection();
+        try {
+			PreparedStatement send = dbConnection.prepareStatement("delete STUDENTS where ID = " + id);
+			int exe = send.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        url = "/logged.jsp";
+        request.setAttribute("success", "Student successfully deleted from the database!");
+        ServletContext context = getServletContext();
+        RequestDispatcher dispatcher = context.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
+        pool.freeConnection(dbConnection);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+package pcon;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class addstu
+ */
+@WebServlet("/editpro")
+public class editpro extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static Connection dbConnection = null;
+    private DBconnect dcc = null;
+     private UserController uc = new UserController(dbConnection);
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public editpro() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String url = "/EditP.jsp";
+		String id = request.getParameter("id");
+        String fname = request.getParameter("fname");
+        String lname = request.getParameter("lname");
+        String major = request.getParameter("major");
+        String gpa = request.getParameter("gpa");
+        String grad = request.getParameter("grad");
+        ConnectionPool pool = ConnectionPool.getInstance("jdbc/b0gamb01");
+        dbConnection = pool.getConnection();
+        try {
+			PreparedStatement send = dbConnection.prepareStatement("UPDATE PROFESSORS SET PFNAME = ?, PLNAME = ?, DEPT = ?, TEACHES = ?, SEM = ? WHERE PID = ?");
+			send.setString(1, fname);
+			send.setString(2, lname);
+			send.setString(3, major);
+			send.setString(4, gpa);
+			send.setString(5, grad);
+			send.setString(6, id);
+			int exe = send.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        url = "/logged.jsp";
+        request.setAttribute("success", "Professor info successfully updated!");
+        ServletContext context = getServletContext();
+        RequestDispatcher dispatcher = context.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
+        pool.freeConnection(dbConnection);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+package pcon;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class addstu
+ */
+@WebServlet("/editstu")
+public class editstu extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static Connection dbConnection = null;
+    private DBconnect dcc = null;
+     private UserController uc = new UserController(dbConnection);
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public editstu() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String url = "/EditS.jsp";
+		String id = request.getParameter("id");
+        String fname = request.getParameter("fname");
+        String lname = request.getParameter("lname");
+        String major = request.getParameter("major");
+        String gpa = request.getParameter("gpa");
+        String grad = request.getParameter("grad");
+        ConnectionPool pool = ConnectionPool.getInstance("jdbc/b0gamb01");
+        dbConnection = pool.getConnection();
+        try {
+			PreparedStatement send = dbConnection.prepareStatement("UPDATE STUDENTS SET FNAME = ?, LNAME = ?, MAJOR = ?, GPA = ?, GRAD = ? WHERE ID = ?");
+			send.setString(1, fname);
+			send.setString(2, lname);
+			send.setString(3, major);
+			send.setString(4, gpa);
+			send.setString(5, grad);
+			send.setString(6, id);
+			int exe = send.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        url = "/logged.jsp";
+        request.setAttribute("success", "Student info successfully updated!");
+        ServletContext context = getServletContext();
+        RequestDispatcher dispatcher = context.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
+        pool.freeConnection(dbConnection);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+package pcon;
+
+import java.io.IOException;
+import java.sql.Connection;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class logserv
+ */
+@WebServlet("/logserv")
+public class logserv extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    private static Connection dbConnection = null;
+    private DBconnect dcc = null;
+     private UserController uc = new UserController(dbConnection);
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public logserv() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+        String url = "/logpage.jsp";
+        String admin = request.getParameter("user");
+        String password = request.getParameter("password");
+        if (admin == null || admin.length() == 0)
+        {
+            url = "/logpage.jsp";
+            request.setAttribute("error", "username must NOT be empty");
+        }
+        if (password == null || password.length() == 0)
+        {
+            url = "/logpage.jsp";
+            request.setAttribute("error", "password must NOT be empty");
+        }
+        else
+        {
+            try
+            {
+            	ConnectionPool pool = ConnectionPool.getInstance("jdbc/b0gamb01");
+                dbConnection = pool.getConnection();
+                if (dbConnection != null)
+                {
+                	System.out.println("Connection was obtained succesfully");
+                    uc = new UserController(dbConnection);
+                    if (uc.findUser(admin, password) == true)
+                    {
+                        url = "/welpage.jsp";
+                        request.setAttribute("success", "You have been logged in successfully!");
+                        request.setAttribute("students", "Student List");
+                        request.setAttribute("profs", "Professor List");
+                        request.setAttribute("dept", "Department List");
+                        request.setAttribute("astu", "Add Student");
+                        request.setAttribute("dstu", "Delete Student");
+                        request.setAttribute("ustu", "Edit Student");
+                        request.setAttribute("apro", "Add Professor");
+                        request.setAttribute("dpro", "Delete Professor");
+                        request.setAttribute("upro", "Edit Professor");
+                    }
+                    else
+                    {
+                        url = "/logpage.jsp";
+                        request.setAttribute("error", "Username or password incorrect");
+                    } // end if
+                    pool.freeConnection(dbConnection);
+                }
+                else
+                {
+                    System.out.println("Connection is null");
+                }
+                
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            } // end try catch
+        } // end if
+        ServletContext context = getServletContext();
+        RequestDispatcher dispatcher = context.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <display-name>Data_Project</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+  </welcome-file-list>
+  <resource-ref>
+ 	<res-ref-name>jdbc/b0gamb01</res-ref-name>
+ 	<res-type>javax.sql.DataSource</res-type>
+ 	<res-auth>Container</res-auth>
+ </resource-ref>
+</web-app>\
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Add a Professor</title>
+</head>
+<body>
+	<form action="./addpro">
+		<table Style="border-collapse: separate; border-spacing: 5px;">
+				<tr>
+						<td>First Name:</td>
+						<td><input name="fname" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Last Name:</td>
+						<td><input name="lname" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Department:</td>
+						<td><input name="major" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Teaches:</td>
+						<td><input name="gpa" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Active Semesters:</td>
+						<td><input name="grad" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td></td>
+						<td><input type="submit" value="Add to List"></td>
+						<td></td>
+				</tr>
+		</table>		
+	</form>
+	<p>
+<a href="logged.jsp">Return to Main Menu</a>
+</p>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Add a Student</title>
+</head>
+<body>
+	<form action="./addstu">
+		<table Style="border-collapse: separate; border-spacing: 5px;">
+				<tr>
+						<td>First Name:</td>
+						<td><input name="fname" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Last Name:</td>
+						<td><input name="lname" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Major:</td>
+						<td><input name="major" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>GPA:</td>
+						<td><input name="gpa" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Graduate? (Yes/No):</td>
+						<td><input name="grad" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td></td>
+						<td><input type="submit" value="Add to List"></td>
+						<td></td>
+				</tr>
+		</table>		
+	</form>
+	<p>
+<a href="logged.jsp">Return to Main Menu</a>
+</p>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Delete a Professor</title>
+</head>
+<body>
+<form action="./delpro">
+		<table Style="border-collapse: separate; border-spacing: 5px;">
+				<tr>
+						<td>Enter ID of Professor to Delete:</td>
+						<td><input name="id" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						
+						<td><input type="submit" value="Delete from List"></td>
+						
+				</tr>
+		</table>		
+	</form>
+	<p>
+<a href="logged.jsp">Return to Main Menu</a>
+</p>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Delete a Student</title>
+</head>
+<body>
+<form action="./delstu">
+		<table Style="border-collapse: separate; border-spacing: 5px;">
+				<tr>
+						<td>Enter ID of Student to Delete:</td>
+						<td><input name="id" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						
+						<td><input type="submit" value="Delete from List"></td>
+						
+				</tr>
+		</table>		
+	</form>
+	<p>
+<a href="logged.jsp">Return to Main Menu</a>
+</p>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Display Department List</title>
+<style>
+table, th, td {
+  border: 1px solid red; padding: 5px; border-spacing: 2px; margin-left: auto; margin-right: auto;
+}
+</style>
+</head>
+<body>
+	<%
+	Class.forName("com.ibm.db2.jcc.DB2Driver");
+	Connection dbConnection = DriverManager.getConnection("jdbc:db2://db2.cecsresearch.org:50000/b0gamb01", "b0gamb01", "Spring2022");
+	Statement st = dbConnection.createStatement();
+	String query = "SELECT * FROM DEPARTMENTS";
+	ResultSet rs = st.executeQuery(query);
+	%>
+	<br>
+	<h2>List of Departments</h2>
+	<table style="">
+		<tr>
+			<th>ID</th>
+			<th>Department Name</th>
+		</tr>
+		<%
+		while (rs.next()) {
+		%>
+		<tr>
+			<td>
+				<%
+				out.println(rs.getInt(1));
+				%>
+			</td>
+			<td>
+				<%
+				out.println(rs.getString(2));
+				%>
+			</td>
+		</tr>
+		<%
+		}
+		rs.close();
+		st.close();
+		dbConnection.close();
+		%>
+	</table>
+<p>
+<a href="logged.jsp">Return to Main Menu</a>
+</p>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Edit a Professor</title>
+</head>
+<body>
+	<form action="./editpro">
+		<table Style="border-collapse: separate; border-spacing: 5px;">
+				<tr>
+						<td>ID of Professor to Edit:</td>
+						<td><input name="id" type="text" size="25" value = "" required></td>
+				</tr>
+				<td>Put newly updated professor info for this ID below.</td>
+				<tr>
+						<td>First Name:</td>
+						<td><input name="fname" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Last Name:</td>
+						<td><input name="lname" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Department:</td>
+						<td><input name="major" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Teaches:</td>
+						<td><input name="gpa" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Active Semesters:</td>
+						<td><input name="grad" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td></td>
+						<td><input type="submit" value="Update Professor Info"></td>
+						<td></td>
+				</tr>
+		</table>		
+	</form>
+	<p>
+<a href="logged.jsp">Return to Main Menu</a>
+</p>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Edit a Student</title>
+</head>
+<body>
+	<form action="./editstu">
+		<table Style="border-collapse: separate; border-spacing: 5px;">
+				<tr>
+						<td>ID of Student to Edit:</td>
+						<td><input name="id" type="text" size="25" value = "" required></td>
+				</tr>
+				<td>Put newly updated student info for this ID below.</td>
+				<tr>
+						<td>First Name:</td>
+						<td><input name="fname" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Last Name:</td>
+						<td><input name="lname" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Major:</td>
+						<td><input name="major" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>GPA:</td>
+						<td><input name="gpa" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td>Graduate? (Yes/No):</td>
+						<td><input name="grad" type="text" size="25" value = "" required></td>
+				</tr>
+				<tr>
+						<td></td>
+						<td><input type="submit" value="Update Student Info"></td>
+						<td></td>
+				</tr>
+		</table>		
+	</form>
+	<p>
+<a href="logged.jsp">Return to Main Menu</a>
+</p>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Display Professors List</title>
+<style>
+table, th, td {
+  border: 1px solid red; padding: 5px; border-spacing: 2px; margin-left: auto; margin-right: auto;
+}
+</style>
+</head>
+<body>
+	<%
+	Class.forName("com.ibm.db2.jcc.DB2Driver");
+	Connection dbConnection = DriverManager.getConnection("jdbc:db2://db2.cecsresearch.org:50000/b0gamb01", "b0gamb01", "Spring2022");
+	Statement st = dbConnection.createStatement();
+	String query = "SELECT * FROM PROFESSORS";
+	ResultSet rs = st.executeQuery(query);
+	%>
+	<br>
+	<h2>List of Professors</h2>
+	<table style="">
+		<tr>
+			<th>ID</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Department</th>
+			<th>Class Taught</th>
+			<th>Active Semesters</th>
+		</tr>
+		<%
+		while (rs.next()) {
+		%>
+		<tr>
+			<td>
+				<%
+				out.println(rs.getInt(1));
+				%>
+			</td>
+			<td>
+				<%
+				out.println(rs.getString(2));
+				%>
+			</td>
+			<td>
+				<%
+				out.println(rs.getString(3));
+				%>
+			</td>
+			<td>
+				<%
+				out.println(rs.getString(4));
+				%>
+			</td>
+			<td>
+				<%
+				out.println(rs.getString(5));
+				%>
+			</td>
+			<td>
+				<%
+				out.println(rs.getString(6));
+				%>
+			</td>
+		</tr>
+		<%
+		}
+		rs.close();
+		st.close();
+		dbConnection.close();
+		%>
+	</table>
+<p>
+<a href="logged.jsp">Return to Main Menu</a>
+</p>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Display Students List</title>
+<style>
+table, th, td {
+  border: 1px solid red; padding: 5px; border-spacing: 2px; margin-left: auto; margin-right: auto;
+}
+</style>
+</head>
+<body>
+	<%
+	Class.forName("com.ibm.db2.jcc.DB2Driver");
+	Connection dbConnection = DriverManager.getConnection("jdbc:db2://db2.cecsresearch.org:50000/b0gamb01", "b0gamb01", "Spring2022");
+	Statement st = dbConnection.createStatement();
+	String query = "SELECT * FROM STUDENTS";
+	ResultSet rs = st.executeQuery(query);
+	%>
+	<br>
+	<h2>List of Students</h2>
+	<table style="">
+		<tr>
+			<th>ID</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Major</th>
+			<th>GPA</th>
+			<th>Graduate?</th>
+		</tr>
+		<%
+		while (rs.next()) {
+		%>
+		<tr>
+			<td>
+				<%
+				out.println(rs.getInt(1));
+				%>
+			</td>
+			<td>
+				<%
+				out.println(rs.getString(2));
+				%>
+			</td>
+			<td>
+				<%
+				out.println(rs.getString(3));
+				%>
+			</td>
+			<td>
+				<%
+				out.println(rs.getString(4));
+				%>
+			</td>
+			<td>
+				<%
+				out.println(rs.getFloat(5));
+				%>
+			</td>
+			<td>
+				<%
+				out.println(rs.getString(6));
+				%>
+			</td>
+		</tr>
+		<%
+		}
+		rs.close();
+		st.close();
+		dbConnection.close();
+		%>
+	</table>
+<p>
+<a href="logged.jsp">Return to Main Menu</a>
+</p>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Welcome Page</title>
+</head>
+<body>	
+	<%
+	String success_out = "";
+	Object success = request.getAttribute("success");
+	if(success != null)
+		success_out = success.toString();
+	%>
+<h1>Welcome to the Database of Engineering Students and Professors!</h1>
+<h4>Use this app to manage the students and professors on the engineering university's database.</h4>
+<p style="color: green"><%=success_out%></p>
+<p>
+<a href="ListStudents.jsp">Student List</a>
+</p>
+<p>
+<a href="ListProf.jsp">Professor List</a>
+</p>
+<p>
+<a href="DeptList.jsp">Department List</a>
+</p>
+<p>
+<a href="AddS.jsp">Add Student</a>
+</p>
+<p>
+<a href="DeleteS.jsp">Delete Student</a>
+</p>
+<p>
+<a href="EditS.jsp">Edit Student</a>
+</p>
+<p>
+<a href="AddP.jsp">Add Professor</a>
+</p>
+<p>
+<a href="DeleteP.jsp">Delete Professor</a>
+</p>
+<p>
+<a href="EditP.jsp">Edit Professor</a>
+</p>
+<a href="logpage.jsp">Login</a>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>University Students and Professors</title>
+</head>
+<body>
+	<%
+	String error_out = "";
+	Object error = request.getAttribute("error");
+	if(error != null)
+		error_out = error.toString();
+	%>
+	<form action="./logserv">
+		<table Style="border-collapse: separate; border-spacing: 5px;">
+				<tr>
+						<td>Username:</td>
+						<td><input name="user" type="text" size="25"></td>
+						<td style="color: orange"><%=error_out%></td>
+				</tr>
+				<tr>
+						<td>Password:</td>
+						<td><input name="password" type="text" size="25"></td>
+				</tr>
+				<tr>
+						<td></td>
+						<td><input type="submit" value="Login"></td>
+						<td></td>
+				</tr>
+		</table>		
+	</form>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Welcome Page</title>
+</head>
+<body>	
+	<%
+	String success_out = "";
+	Object success = request.getAttribute("success");
+	if(success != null)
+		success_out = success.toString();
+	%>
+	<%
+	String show_students = "";
+	Object students = request.getAttribute("students");
+	if(success != null)
+		show_students = students.toString();
+	%>
+	<%
+	String show_profs = "";
+	Object profs = request.getAttribute("profs");
+	if(profs != null)
+		show_profs = profs.toString();
+	%>
+	<%
+	String show_dept = "";
+	Object dept = request.getAttribute("dept");
+	if(dept != null)
+		show_dept = dept.toString();
+	%>
+	<%
+	String a_stu = "";
+	Object astu = request.getAttribute("astu");
+	if(astu != null)
+		a_stu = astu.toString();
+	%>
+	<%
+	String d_stu = "";
+	Object dstu = request.getAttribute("dstu");
+	if(dstu != null)
+		d_stu = dstu.toString();
+	%>
+	<%
+	String u_stu = "";
+	Object ustu = request.getAttribute("ustu");
+	if(ustu != null)
+		u_stu = ustu.toString();
+	%>
+	<%
+	String a_pro = "";
+	Object apro = request.getAttribute("apro");
+	if(apro != null)
+		a_pro = apro.toString();
+	%>
+	<%
+	String d_pro = "";
+	Object dpro = request.getAttribute("dpro");
+	if(dpro != null)
+		d_pro = dpro.toString();
+	%>
+	<%
+	String u_pro = "";
+	Object upro = request.getAttribute("upro");
+	if(upro != null)
+		u_pro = upro.toString();
+	%>
+<h1>Welcome to the Database of Engineering Students and Professors!</h1>
+<h4>Use this app to manage the students and professors on the engineering university's database.</h4>
+<p style="color: green"><%=success_out%></p>
+<p>
+<a href="ListStudents.jsp"><%=show_students%></a>
+</p>
+<p>
+<a href="ListProf.jsp"><%=show_profs%></a>
+</p>
+<p>
+<a href="DeptList.jsp"><%=show_dept%></a>
+</p>
+<p>
+<a href="AddS.jsp"><%=a_stu%></a>
+</p>
+<p>
+<a href="DeleteS.jsp"><%=d_stu%></a>
+</p>
+<p>
+<a href="EditS.jsp"><%=u_stu%></a>
+</p>
+<p>
+<a href="AddP.jsp"><%=a_pro%></a>
+</p>
+<p>
+<a href="DeleteP.jsp"><%=d_pro%></a>
+</p>
+<p>
+<a href="EditP.jsp"><%=u_pro%></a>
+</p>
+<a href="logpage.jsp">Login</a>
+</body>
+</html>
